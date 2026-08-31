@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#f7f3ef" name="theme-color"/>
+<title>仙台旅行 2026｜日付別 最終版</title>
+<style>
+:root{
+  --bg:#fff;--panel:#f7fbfc;--line:#dce8eb;--ink:#25343a;--muted:#6d7e85;
+  --accent:#10a9c7;--accent-deep:#0789a4;--accent-soft:#eaf9fc;
+  --green:#62b38a;--orange:#ef9b35;--red:#df645c;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+}
+a{color:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 42px}
+.hero{
+  margin:0 -14px 8px;padding:22px 14px 24px;
+  background:linear-gradient(135deg,#11abc8,#4bc7dc);color:#fff
+}
+.hero-inner{max-width:860px;margin:auto}
+.kicker{font-size:11px;font-weight:800;letter-spacing:.08em;opacity:.9;margin-bottom:8px}
+.hero h1{margin:0 0 8px;font-size:27px;line-height:1.25}
+.hero p{margin:0;font-size:13px;line-height:1.7;opacity:.95}
+.trip-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:13px}
+.meta-pill{padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.18);font-size:11px;font-weight:800}
+.live-status{
+  margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  padding:9px 10px;border:1px solid rgba(255,255,255,.26);border-radius:10px;background:rgba(255,255,255,.12);
+  font-size:11px
+}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#fff}
+.day-tabs{
+  position:sticky;top:0;z-index:50;display:grid;grid-template-columns:repeat(4,1fr);
+  gap:5px;padding:8px;margin:8px 0 12px;background:rgba(255,255,255,.96);
+  border:1px solid var(--line);border-radius:11px
+}
+.day-tab{
+  border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--accent-deep);
+  padding:8px 4px;font:inherit;font-size:10px;font-weight:900;cursor:pointer;text-align:center
+}
+.day-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.day-tab-date{display:block;font-size:12px}.day-tab-sub{display:block;font-size:8px;margin-top:1px;opacity:.85}
+.family-filter{
+  display:flex;gap:6px;overflow:auto;margin:8px 0 14px;padding-bottom:2px;scrollbar-width:none
+}
+.family-filter::-webkit-scrollbar{display:none}
+.filter-btn{
+  flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:#fff;
+  padding:7px 10px;font:inherit;font-size:11px;font-weight:900;cursor:pointer
+}
+.filter-btn.active[data-filter="all"]{background:#26383e;color:#fff;border-color:#26383e}
+.filter-btn.active[data-filter="honda"]{background:#fff0f5;color:#b63868;border-color:#f5bfd2}
+.filter-btn.active[data-filter="okumura"]{background:#edf9f0;color:#267444;border-color:#bfe4ca}
+.filter-btn.active[data-filter="kubota"]{background:#eef6ff;color:#28659a;border-color:#bfd9f2}
+.top-panel,section.day{display:none}
+.top-panel.active-top,section.day.active-day{display:block}
+.section-title{margin:20px 2px 10px}
+.section-title h2{margin:0;font-size:19px}
+.section-title .small{font-size:10px;color:var(--muted)}
+.timeline{position:relative;display:grid;gap:9px}
+.card,.utility-card,.weather-section,.reco-section,.deadline-box,.reservation-hub{
+  background:#fff;border:1px solid var(--line);border-radius:11px
+}
+.card{position:relative;padding:13px}
+.card.transport{border-left:4px solid var(--green)}
+.card.activity{border-left:4px solid var(--orange)}
+.card.hotel{border-left:4px solid #8b87cf}
+.card.shared{border-left:4px solid var(--accent)}
+.card .time{font-size:11px;font-weight:900;color:var(--accent-deep);margin-bottom:4px}
+.card .title,.card h3{font-size:15px;font-weight:900;line-height:1.45;margin:0 0 5px}
+.card .desc,.card p{font-size:12px;line-height:1.6;color:var(--muted)}
+.family-tags{display:flex;gap:5px;flex-wrap:wrap;margin:0 0 7px}
+.tag{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;border:1px solid transparent}
+.tag.honda{background:#fff0f5;color:#b63868;border-color:#f5bfd2}
+.tag.okumura{background:#edf9f0;color:#267444;border-color:#bfe4ca}
+.tag.kubota{background:#eef6ff;color:#28659a;border-color:#bfd9f2}
+.actions,.aquarium-actions,.weather-actions,.reco-links,.drive-sa-links{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px
+}
+.actions a,.aquarium-actions a,.weather-actions a,.reco-links a,.drive-sa-links a,.route-btn{
+  display:flex;align-items:center;justify-content:center;min-height:38px;padding:7px 8px;
+  border:1px solid var(--line);border-radius:8px;text-decoration:none;font-size:10px;font-weight:900;
+  text-align:center;background:#fff;color:var(--accent-deep)
+}
+.actions a:first-child,.aquarium-actions a:first-child,.weather-actions a:first-child{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tip-box,.transit-box,.drive-sa,.aquarium-note{
+  margin-top:9px;padding:9px 10px;border-radius:9px;background:#f7fbfc;border:1px solid var(--line);
+  font-size:10px;line-height:1.65;color:var(--muted)
+}
+.tip-box strong,.transit-box strong,.drive-sa b{color:var(--ink)}
+.deadline-box{margin:12px 0;padding:12px;background:#fffaf2;border-color:#f1d6a9}
+.deadline-head{font-size:12px;font-weight:950;margin-bottom:7px}
+.deadline-sub{font-size:9px;color:var(--muted);margin:-2px 0 7px}
+.deadline-list{display:grid;gap:6px}
+.deadline-item{padding:8px;border-radius:8px;background:#fff;border:1px solid #f2e4cf;font-size:10px;line-height:1.5}
+.deadline-date{font-weight:950;color:#a76818}
+.weather-section,.reco-section,.reservation-hub{margin:12px 0;overflow:hidden}
+.weather-section summary,.reco-section summary,.reservation-hub summary,.reservation-details summary{
+  cursor:pointer;list-style:none;padding:11px 12px;background:var(--panel);font-size:12px;font-weight:900
+}
+.weather-section summary::-webkit-details-marker,.reco-section summary::-webkit-details-marker,
+.reservation-hub summary::-webkit-details-marker,.reservation-details summary::-webkit-details-marker{display:none}
+.weather-body,.reco-body,.reservation-body{padding:11px}
+.weather-grid,.reco-grid{display:grid;gap:8px}
+.weather-card,.reco-card,.reservation-number{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fff}
+.weather-date,.reco-card h4{font-size:12px;font-weight:900;margin:0 0 4px}
+.weather-place{font-size:12px;font-weight:850}
+.weather-status,.reco-card p{font-size:10px;line-height:1.55;color:var(--muted)}
+.utility-panel{display:grid;grid-template-columns:1.2fr .8fr;gap:8px;margin:12px 0}
+.utility-card{padding:12px}.utility-card h3{margin:0 0 6px;font-size:12px}
+.next-time{font-size:20px;font-weight:950;color:var(--accent-deep)}
+.next-title{font-size:12px;font-weight:900}.countdown{font-size:10px;color:var(--muted);margin-top:3px}
+.quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.quick-btn{border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center;text-decoration:none;font-size:10px;font-weight:900}
+.quick-btn.primary{background:var(--accent);color:#fff}
+.reservation-grid{display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:10px;line-height:1.5}
+.reservation-grid dt{font-weight:800;color:var(--muted)}.reservation-grid dd{margin:0}
+.now-line{position:absolute;left:0;right:0;border-top:2px solid var(--red);z-index:9;pointer-events:none}
+.now-line:before{content:"";position:absolute;left:5px;top:-5px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+.now-label{position:absolute;right:5px;top:-13px;background:var(--red);color:#fff;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:900}
+.card.is-past{opacity:.48}.card.is-next{border-color:#7dd6e5}
+.card.filter-hidden{display:none!important}
+.footer{margin-top:24px;padding-top:15px;border-top:1px solid var(--line);font-size:9px;text-align:center;color:#8a989e}
+@media(max-width:680px){
+  .utility-panel{grid-template-columns:1fr}
+  .reservation-grid{grid-template-columns:1fr;gap:2px}
+  .reservation-grid dd{margin-bottom:5px}
+}
+
+/* ===== 読みやすさ優先：文字サイズ大きめ ===== */
+body{font-size:16px}
+.hero h1{font-size:30px}
+.hero p{font-size:15px}
+.kicker{font-size:13px}
+.meta-pill{font-size:13px}
+.live-status{font-size:13px}
+
+.day-tab{font-size:12px;padding:10px 4px}
+.day-tab-date{font-size:14px}
+.day-tab-sub{font-size:10px}
+
+.filter-btn{font-size:13px;padding:9px 12px}
+.section-title h2{font-size:22px}
+.section-title .small{font-size:12px}
+
+.card{padding:15px}
+.card .time{font-size:14px}
+.card .title,.card h3{font-size:18px}
+.card .desc,.card p{font-size:14px;line-height:1.7}
+.tag{font-size:12px;padding:5px 9px}
+
+.actions a,.aquarium-actions a,.weather-actions a,.reco-links a,.drive-sa-links a,.route-btn{
+  font-size:13px;min-height:44px;padding:9px 10px
+}
+.tip-box,.transit-box,.drive-sa,.aquarium-note{
+  font-size:13px;line-height:1.7;padding:11px 12px
+}
+
+.deadline-head{font-size:15px}
+.deadline-sub{font-size:12px}
+.deadline-item{font-size:13px;line-height:1.6;padding:10px}
+
+.weather-section summary,.reco-section summary,.reservation-hub summary,.reservation-details summary{
+  font-size:15px;padding:13px
+}
+.weather-date,.reco-card h4{font-size:15px}
+.weather-place{font-size:14px}
+.weather-status,.reco-card p{font-size:13px;line-height:1.65}
+
+.utility-card h3{font-size:14px}
+.next-time{font-size:24px}
+.next-title{font-size:15px}
+.countdown{font-size:12px}
+.quick-btn{font-size:12px;padding:10px}
+
+.reservation-grid{font-size:13px;line-height:1.6}
+.footer{font-size:11px}
+.now-label{font-size:11px;padding:4px 8px}
+</style></head>
+<body>
+<main class="wrap">
+<section class="hero">
+<div class="hero-inner">
+<div class="kicker">SENDAI FAMILY TRIP 2026</div>
+<h1>仙台旅行のしおり</h1>
+<p>3家族の予定をひとつにまとめた、スマホで見やすい旅行ページ。必要なときに予定・移動・地図をすぐ確認できます。</p>
+<div class="trip-meta">
+<span class="meta-pill">2026.09.04 Fri — 09.06 Sun</span>
+<span class="meta-pill">本多家・奥村家・久保田家</span>
+<span class="meta-pill">仙台・秋保</span>
+</div>
+<div aria-live="polite" class="live-status" id="liveStatus">
+<span class="live-dot"></span>
+<span class="clock" id="liveClock">現在時刻を確認中…</span>
+<span class="state" id="liveState">旅行当日は「いま」の位置を自動表示します</span>
+</div>
+</div>
+</section><div aria-label="日付を選択" class="day-tabs" id="dayTabs"><button class="day-tab" data-day="top" type="button"><span class="day-tab-date">TOP</span><span class="day-tab-sub">まとめ</span></button><button class="day-tab" data-day="d1" type="button"><span class="day-tab-date">9/4（金）</span><span class="day-tab-sub">仙台へ</span></button><button class="day-tab" data-day="d2" type="button"><span class="day-tab-date">9/5（土）</span><span class="day-tab-sub">仙台・秋保</span></button><button class="day-tab" data-day="d3" type="button"><span class="day-tab-date">9/6（日）</span><span class="day-tab-sub">水族館・帰宅</span></button></div>
+<div aria-label="家族で予定を絞り込む" class="family-filter" id="familyFilter">
+<button class="filter-btn active" data-filter="all">全員</button>
+<button class="filter-btn" data-filter="honda">本多家</button>
+<button class="filter-btn" data-filter="okumura">奥村家</button>
+<button class="filter-btn" data-filter="kubota">久保田家</button>
+</div>
+<details class="reservation-hub" id="reservationHub">
+<summary>予約番号まとめ</summary>
+<div class="reservation-hub-body">
+<div class="res-row">
+<div><div class="label">TAOYA秋保 1室目</div><div class="value">3645-1752-4247</div></div>
+<button class="copy-btn" data-copy="3645-1752-4247">コピー</button>
+</div>
+<div class="res-row">
+<div><div class="label">TAOYA秋保 2室目</div><div class="value">3645-1753-8688</div></div>
+<button class="copy-btn" data-copy="3645-1753-8688">コピー</button>
+</div>
+<div class="res-row">
+<div><div class="label">TAOYA秋保 3室目</div><div class="value">3645-1754-4428</div></div>
+<button class="copy-btn" data-copy="3645-1754-4428">コピー</button>
+</div>
+</div>
+</details>
+<section class="top-panel" id="topPanel">
+<div class="schedule-only-note">
+  旅行全体の確認ページ。デッドライン・天気・おすすめ情報をここにまとめています。
+</div>
+<div class="deadline-box" id="deadlines">
+<div class="deadline-head">⏰ 予約・移動のデッドライン</div><div class="deadline-sub">旅行中の重要な時間をまとめて確認</div>
+<div class="deadline-list"><div class="deadline-item" data-day="d1">
+<strong>9/4 12:50</strong><br/>
+  ✈️ Peach MM414｜チェックイン・手荷物預け締切<br/>
+  13:20 新千歳空港発。Peach国内線は出発30分前までにチェックイン・手荷物預けが必要。
+</div>
+<div class="deadline-item" data-day="d2">
+<div class="deadline-date">9/5 12:00まで</div>
+<div class="deadline-text">
+        秋保交通｜14:00 定額ジャンボタクシー
+        <span class="deadline-status">予約は利用時刻の2時間前まで。空車確認が必要。</span>
+</div>
+</div>
+<div class="deadline-item" data-day="d2">
+<div class="deadline-date">9/5 15:00</div>
+<div class="deadline-text">
+        TAOYA秋保｜到着予定
+        <span class="deadline-status">チェックイン可能時間 15:00〜19:00。</span>
+</div>
+</div>
+<div class="deadline-item" data-day="d3">
+<div class="deadline-date">9/6 16:19</div>
+<div class="deadline-text">
+        🚄 仙台駅｜新幹線出発
+        <span class="deadline-status">水族館からの移動時間を見て早めに仙台駅へ。</span>
+</div>
+</div>
+<div class="deadline-item" data-day="d3">
+<div class="deadline-date">9/6 16:50</div>
+<div class="deadline-text">
+        ✈️ 仙台空港｜Peach出発
+        <span class="deadline-status">水族館から中野栄駅→仙台駅→仙台空港アクセス線で移動。</span>
+</div>
+</div>
+<div class="deadline-item" data-day="d3">
+<strong>9/6 16:20</strong><br/>
+  ✈️ Peach MM419｜チェックイン・手荷物預け締切<br/>
+  16:50 仙台空港発。Peach国内線は出発30分前までにチェックイン・手荷物預けが必要。
+</div></div>
+</div><details class="weather-section" id="weatherSection" open="">
+<summary>☀️ 旅行中の天気</summary>
+<div class="weather-body">
+<div class="weather-note">
+      9/4〜9/6の具体的な予報は旅行直前に更新予定。今は各エリアの最新天気をすぐ確認できるリンクだけ用意しています。
+    </div>
+<div class="weather-grid">
+<div class="weather-card">
+<div class="weather-date">9/4（金）</div>
+<div class="weather-place">仙台市内</div>
+<div class="weather-status">最高・最低気温／降水確率／服装メモは直前に追記</div>
+<div class="weather-actions"><a href="https://weathernews.jp/onebox/tenki/miyagi/04101/" rel="noopener" target="_blank">☀️ ウェザーニュースで最新予報</a></div>
+</div>
+<div class="weather-card">
+<div class="weather-date">9/5（土）</div>
+<div class="weather-place">仙台市内・秋保</div>
+<div class="weather-status">アンパンマン／ポケふた／TAOYA移動の天気を直前に確認</div>
+<div class="weather-actions"><a href="https://weathernews.jp/onebox/tenki/miyagi/04101/" rel="noopener" target="_blank">☀️ ウェザーニュースで最新予報</a></div>
+</div>
+<div class="weather-card">
+<div class="weather-date">9/6（日）</div>
+<div class="weather-place">秋保・仙台うみの杜水族館周辺</div>
+<div class="weather-status">移動が多い日なので、雨・気温を直前にチェック</div>
+<div class="weather-actions"><a href="https://weathernews.jp/onebox/tenki/spot/aquarium/02/6597960/" rel="noopener" target="_blank">☀️ ウェザーニュースで最新予報</a></div>
+</div>
+</div>
+</div>
+</details><details class="reco-section" id="sendaiRecommendations">
+<summary>🎁 仙台おすすめ情報・お土産</summary>
+<div class="reco-body">
+<div class="reco-intro">
+      仙台駅で買いやすい定番を中心にまとめ。帰りに迷ったらここだけ見ればOK。
+    </div>
+<div class="reco-grid">
+<div class="reco-card">
+<h4>🌕 萩の月｜菓匠三全</h4>
+<p>カスタードクリームをカステラ生地で包んだ仙台銘菓。公式では10個入2,650円、簡易箱10個入2,214円。</p>
+<div class="reco-badges">
+<span class="reco-badge">王道</span>
+<span class="reco-badge">常温</span>
+<span class="reco-badge">仙台駅で購入可</span>
+</div>
+<div class="reco-links">
+<a href="https://www.sanzen.co.jp/product/haginotsuki/index.html" rel="noopener" target="_blank">公式</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%8F%93%E5%8C%A0%E4%B8%89%E5%85%A8%20%E4%BB%99%E5%8F%B0%E9%A7%85" rel="noopener" target="_blank">MAP</a>
+</div>
+</div>
+<div class="reco-card">
+<h4>🟢 ずんだ餅・ずんだシェイク｜ずんだ茶寮</h4>
+<p>仙台らしいずんだ系。ずんだシェイクは仙台駅3F「ずんだ小径店」で販売。ずんだ餅やずんだ菓子も公式商品として展開。</p>
+<div class="reco-badges">
+<span class="reco-badge">仙台らしさ</span>
+<span class="reco-badge">その場で食べる</span>
+<span class="reco-badge">仙台駅3F</span>
+</div>
+<div class="reco-links">
+<a href="https://zundasaryo.com/" rel="noopener" target="_blank">公式</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%9A%E3%82%93%E3%81%A0%E8%8C%B6%E5%AF%AE%20%E4%BB%99%E5%8F%B0%E9%A7%85%E3%81%9A%E3%82%93%E3%81%A0%E5%B0%8F%E5%BE%84%E5%BA%97" rel="noopener" target="_blank">MAP</a>
+</div>
+</div>
+<div class="reco-card">
+<h4>🐟 阿部の笹かまぼこ｜阿部蒲鉾店</h4>
+<p>昔ながらの看板商品。公式価格は1枚230円。エスパル仙台本館B1F「エキチカおみやげ通り」に店舗あり。</p>
+<div class="reco-badges">
+<span class="reco-badge">仙台名物</span>
+<span class="reco-badge">甘くない</span>
+<span class="reco-badge">仙台駅で購入可</span>
+</div>
+<div class="reco-links">
+<a href="https://www.abekama.co.jp/products-detail01" rel="noopener" target="_blank">公式</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%98%BF%E9%83%A8%E8%92%B2%E9%89%BE%E5%BA%97%20%E3%82%A8%E3%82%B9%E3%83%91%E3%83%AB%E4%BB%99%E5%8F%B0%E5%BA%97" rel="noopener" target="_blank">MAP</a>
+</div>
+</div>
+<div class="reco-card">
+<h4>🥩 牛たん土産｜伊達の牛たん本舗</h4>
+<p>本格牛たん「芯たん」系から、せんべい・ジャーキーまでお土産向け商品あり。仙台駅1F、3F、エスパル仙台などに販売店あり。</p>
+<div class="reco-badges">
+<span class="reco-badge">甘くない</span>
+<span class="reco-badge">家用にも</span>
+<span class="reco-badge">仙台駅で購入可</span>
+</div>
+<div class="reco-links">
+<a href="https://www.dategyu.jp/shop/" rel="noopener" target="_blank">公式・店舗一覧</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=%E4%BC%8A%E9%81%94%E3%81%AE%E7%89%9B%E3%81%9F%E3%82%93%E6%9C%AC%E8%88%97%20%E4%BB%99%E5%8F%B0%E9%A7%85" rel="noopener" target="_blank">MAP</a>
+</div>
+</div>
+<div class="reco-card">
+<h4>🛍️ 迷ったら｜仙台駅2F・S-PAL仙台</h4>
+<p>仙台駅2F「おみやげ処せんだい」には菓匠三全、阿部蒲鉾店、鐘崎、牛たん各店、ずんだ茶寮など多数。まとめ買いしやすい。</p>
+<div class="reco-badges">
+<span class="reco-badge">まとめ買い</span>
+<span class="reco-badge">帰る前に便利</span>
+</div>
+<div class="reco-links">
+<a href="https://www.s-pal.jp/sendai/shopping/floor/?floor=b1f" rel="noopener" target="_blank">S-PAL公式</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=%E4%BB%99%E5%8F%B0%E9%A7%85%20%E3%81%8A%E3%81%BF%E3%82%84%E3%81%92%E5%87%A6%E3%81%9B%E3%82%93%E3%81%A0%E3%81%84" rel="noopener" target="_blank">MAP</a>
+</div>
+</div>
+</div>
+</div>
+</details></section><section class="day active" data-date="2026-09-04" id="d1">
+<div class="day-head"><h2 class="date">9/4（金）｜仙台集合</h2><div class="deadline-box daily-deadlines"><div class="deadline-head">⏰ 今日のデッドライン</div><div class="deadline-list"><div class="deadline-item">
+<strong>9/4 12:50</strong><br/>
+✈️ Peach MM414｜チェックイン・手荷物預け締切<br/>
+13:20 新千歳空港発。Peach国内線は出発30分前までにチェックイン・手荷物預けが必要。
+</div></div></div><span class="day-note">それぞれ仙台へ → 夜に集合</span></div>
+<div class="timeline">
+<article class="card transport" data-event="2026-09-04T08:18:00+09:00">
+<div class="family-tags"><span class="tag honda">本多家</span></div>
+<div class="time">08:18 → 09:46</div><div class="title">🚄 東京 → 仙台</div>
+<div class="f honda"><span class="label">はやぶさ11号</span><br/>東京駅 8:18発 → 仙台駅 9:46着</div>
+<div class="tip-box"><strong>💡 ワンポイント</strong><br/>東京駅08:18発、仙台駅09:46着。乗車前に飲み物などを準備しておくと移動がスムーズ。</div><div class="actions"><a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=%E4%BB%99%E5%8F%B0%E9%A7%85" rel="noopener" target="_blank">📍 仙台駅を開く</a></div></article>
+<article class="card transport">
+<div class="family-tags"><span class="tag kubota">久保田家</span></div>
+<div class="time">移動</div><div class="title">🚗 車で仙台へ</div>
+<div class="f kubota">自家用車で仙台へ移動</div>
+<div class="tip-box">
+<strong>🚗 杉並区 → 仙台｜休憩候補</strong><br/>
+  東北道を北上する途中で立ち寄れるSA。休憩場所は当日の道路状況に合わせて選択。
+</div>
+<div class="drive-sa">
+<div class="drive-sa-title">🅿️ SA候補</div>
+<div class="drive-sa-item">
+<b>① 蓮田SA（下り）</b><br/>
+    東北道の玄関口。フードコートは24時間、エクセルシオール カフェやベーカリーなどもあり。
+    <div class="drive-sa-links">
+<a href="https://www.driveplaza.com/sapa/1040/1040021/2/shisetsu_service.html" rel="noopener" target="_blank">NEXCO公式</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%93%AE%E7%94%B0SA%20%E4%B8%8B%E3%82%8A" rel="noopener" target="_blank">📍 MAP</a>
+</div>
+</div>
+<div class="drive-sa-item">
+<b>② 那須高原SA（下り）</b><br/>
+    「那須・旬感リゾート」がコンセプト。フードコートとショッピングコーナーは24時間。
+    <div class="drive-sa-links">
+<a href="https://www.driveplaza.com/sapa/1040/1040121/2/shisetsu_service.html" rel="noopener" target="_blank">NEXCO公式</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%82%A3%E9%A0%88%E9%AB%98%E5%8E%9FSA%20%E4%B8%8B%E3%82%8A" rel="noopener" target="_blank">📍 MAP</a>
+</div>
+</div>
+<div class="drive-sa-item">
+<b>③ 安達太良SA（下り）</b><br/>
+    福島県本宮市のSA。フードコート・ショッピングコーナー・給油は24時間、ベーカリーもあり。
+    <div class="drive-sa-links">
+<a href="https://www.driveplaza.com/sapa/1040/1040176/2/shisetsu_service.html" rel="noopener" target="_blank">NEXCO公式</a>
+<a href="https://www.google.com/maps/search/?api=1&amp;query=%E5%AE%89%E9%81%94%E5%A4%AA%E8%89%AFSA%20%E4%B8%8B%E3%82%8A" rel="noopener" target="_blank">📍 MAP</a>
+</div>
+</div>
+</div>
+</article>
+<article class="card transport" data-event="2026-09-04T13:20:00+09:00">
+<div class="family-tags"><span class="tag okumura">奥村家</span></div>
+<div class="time">13:20 → 14:30</div><div class="title">✈️ 新千歳 → 仙台</div>
+<div class="f okumura"><span class="label">Peach MM414</span><br/>新千歳空港 13:20発 → 仙台空港 14:30着</div>
+<div class="tip-box"><strong>💡 ワンポイント</strong><br/>新千歳13:20発、仙台14:30着。空港到着後は仙台市内へ移動。</div><div class="actions"><a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=%E4%BB%99%E5%8F%B0%E7%A9%BA%E6%B8%AF" rel="noopener" target="_blank">📍 仙台空港を開く</a></div>
+<div class="tip-box">
+<strong>✈️ Peach チェックイン</strong><br/>
+  アプリ：11:20〜12:50（出発120〜30分前）<br/>
+  空港カウンター・手荷物預け：11:50〜12:50（出発90〜30分前）<br/>
+<strong>12:50がチェックイン・手荷物預けの締切。</strong>
+<div class="actions">
+<a class="btn" href="https://www.flypeach.com/lm/ai/airports/checkin" rel="noopener" target="_blank">Peach公式｜チェックイン案内</a>
+</div>
+</div>
+</article>
+<article class="card shared" data-event="2026-09-04T17:30:00+09:00">
+<div class="family-tags">
+<span class="tag honda">本多家</span>
+<span class="tag okumura">奥村家</span>
+<span class="tag kubota">久保田家</span>
+</div>
+<div class="time">17:30</div><div class="title">🍻 居酒屋 矢三朗 新寺弐号館</div><div class="who"><span class="who-all"></span><span class="who-all"></span><span class="who-all"></span></div>
+<div class="meta">初日の夜ごはん。みんなで集合！</div>
+<div class="menu-recommend">
+<div class="menu-recommend-title">🍽️ 食べログ掲載のおすすめ</div>
+<div class="menu-recommend-list">
+<div><strong>金華かつおの藁焼き〈塩たたき〉</strong><span>1,936円</span></div>
+<div><strong>仙台名物 牛たん焼き</strong><span>1,958円</span></div>
+<div><strong>トロ〆サバの藁焼き</strong><span>1,595円</span></div>
+<div><strong>豚バラ肉の仙台味噌漬け焼き</strong><span>429円／1本</span></div>
+<div><strong>とり皮パリパリ焼き</strong><span>209円／1本</span></div>
+</div>
+<div class="menu-recommend-note">食べログ「料理メニュー」で「おすすめ」と表示されている料理から抜粋（掲載価格・税込）</div>
+<div class="tip-box"><strong>✨ ここで食べたい！</strong><br/>・金華かつおの藁焼き〈塩たたき〉<br/>・仙台名物 牛たん焼き<br/>・トロ〆サバの藁焼き</div><div class="actions"><a class="route-btn" href="https://tabelog.com/miyagi/A0401/A040103/4025721/dtlmenu/" rel="noopener" target="_blank">🍽️ 食べログのメニューを見る</a></div>
+</div><div class="actions">
+<a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%B1%85%E9%85%92%E5%B1%8B%20%E7%9F%A2%E4%B8%89%E6%9C%97%20%E6%96%B0%E5%AF%BA%E5%BC%90%E5%8F%B7%E9%A4%A8" rel="noopener" target="_blank">📍 Googleマップ</a>
+<a class="btn site" href="https://akr0603374097.owst.jp/" rel="noopener" target="_blank">↗ お店のページ</a>
+</div>
+<div class="actions"><a class="route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=居酒屋%20矢三朗%20新寺弐号館%20仙台" rel="noopener" target="_blank">📍 現在地から行く</a></div></article>
+<article class="card hotel">
+<div class="family-tags">
+<span class="tag honda">本多家</span>
+<span class="tag okumura">奥村家</span>
+<span class="tag kubota">久保田家</span>
+</div>
+<div class="time">宿泊</div><div class="title">🏨 変なホテルプレミア仙台 国分町</div><div class="who"><span class="who-all"></span><span class="who-all"></span><span class="who-all"></span></div>
+<div class="meta">同じホテルに宿泊</div>
+<div class="tip-box"><strong>💡 ワンポイント</strong><br/>翌朝はポケふたへ立ち寄ってから、それぞれの予定へ。荷物整理は夜のうちにしておくとラク。</div><div class="actions">
+<a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A4%89%E3%81%AA%E3%83%9B%E3%83%86%E3%83%AB%20%E4%BB%99%E5%8F%B0" rel="noopener" target="_blank">📍 Googleマップ</a>
+<a class="btn site" href="https://global.hennnahotel.com/ja/" rel="noopener" target="_blank">↗ 公式サイト</a>
+</div>
+<div class="actions"><a class="route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=変なホテルプレミア仙台%20国分町" rel="noopener" target="_blank">📍 現在地から行く</a></div></article>
+</div>
+</section>
+<section class="day" data-date="2026-09-05" id="d2">
+<div class="day-head"><h2 class="date">9/5（土）｜アンパンマン＆秋保</h2><div class="deadline-box daily-deadlines"><div class="deadline-head">⏰ 今日のデッドライン</div><div class="deadline-list"><div class="deadline-item" data-day="d2">
+<div class="deadline-date">9/5 12:00まで</div>
+<div class="deadline-text">
+        秋保交通｜14:00 定額ジャンボタクシー
+        <span class="deadline-status">予約は利用時刻の2時間前まで。空車確認が必要。</span>
+</div>
+</div><div class="deadline-item" data-day="d2">
+<div class="deadline-date">9/5 15:00</div>
+<div class="deadline-text">
+        TAOYA秋保｜到着予定
+        <span class="deadline-status">チェックイン可能時間 15:00〜19:00。</span>
+</div>
+</div></div></div><span class="day-note">日中は別行動 → TAOYAで合流</span></div>
+<div class="timeline">
+<article class="card shared">
+<div class="family-tags">
+<span class="tag honda">本多家</span>
+<span class="tag okumura">奥村家</span>
+<span class="tag kubota">久保田家</span>
+</div>
+<div class="time">朝</div>
+<div class="title">🏨 変なホテルプレミア仙台 国分町を出発</div>
+<div class="desc">2日目スタート。それぞれの予定へ移動。</div><div class="tip-box"><strong>💡 ワンポイント</strong><br/>このあと3家族でポケふたへ。チェックアウト時に忘れ物チェック。</div><div class="actions"><a class="route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=変なホテルプレミア仙台%20国分町" rel="noopener" target="_blank">📍 現在地から行く</a></div></article>
+<article class="card shared">
+<div class="family-tags"><span class="tag honda">本多家</span><span class="tag okumura">奥村家</span><span class="tag kubota">久保田家</span></div>
+<div class="time">午前</div>
+<div class="title">🕳️ ポケふた｜仙台市</div>
+<div class="desc">仙台市青葉区一番町二丁目6-5</div>
+<div class="tip-box"><strong>✨ ここをチェック！</strong><br/>・仙台市青葉区一番町二丁目6-5に設置されている公式ポケふた<br/>・みんなで記念写真を撮るスポットに</div><div class="actions"><a class="route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E4%BB%99%E5%8F%B0%E5%B8%82%E9%9D%92%E8%91%89%E5%8C%BA%E4%B8%80%E7%95%AA%E7%94%BA%E4%BA%8C%E4%B8%81%E7%9B%AE6-5" rel="noopener" target="_blank">📍 現在地から行く</a></div>
+<div class="actions"><a class="route-btn" href="https://local.pokemon.jp/manhole/desc/54/" rel="noopener" target="_blank">公式ページ</a></div>
+</article>
+<article class="card activity" data-event="2026-09-05T10:00:00+09:00">
+<div class="family-tags">
+<span class="tag okumura">奥村家</span>
+<span class="tag kubota">久保田家</span>
+</div>
+<div class="time">10:00〜17:00（最終入館16:00）</div><div class="title">🍞 仙台アンパンマンこどもミュージアム＆モール</div><div class="who"><span class="who-okumura"></span><span class="who-kubota"></span></div>
+<div class="tip-box"><strong>✨ ここで遊びたい！</strong><br/>・「パンこうじょうのおか」でパンづくりごっこ<br/>・「SLマンひろば」で登ったり滑ったりして遊べる<br/>・「やなせたかし劇場」ではミニステージを毎日開催<br/>・1Fには「バイキンひみつ基地」もある</div><div class="actions">
+<a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=%E4%BB%99%E5%8F%B0%E3%82%A2%E3%83%B3%E3%83%91%E3%83%B3%E3%83%9E%E3%83%B3%E3%81%93%E3%81%A9%E3%82%82%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%B8%E3%82%A2%E3%83%A0%EF%BC%86%E3%83%A2%E3%83%BC%E3%83%AB" rel="noopener" target="_blank">📍 Googleマップ</a>
+<a class="btn site" href="https://www.sendai-anpanman.jp/" rel="noopener" target="_blank">↗ 公式サイト</a>
+</div>
+<div class="actions"><a class="route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=仙台アンパンマンこどもミュージアム＆モール" rel="noopener" target="_blank">📍 現在地から行く</a></div></article>
+<article class="card transport" data-event="2026-09-05T14:00:00+09:00">
+<div class="family-tags">
+<span class="tag honda">本多家</span>
+<span class="tag okumura">奥村家</span>
+</div>
+<div class="time">14:00</div><div class="title">🚕♨️ TAOYA秋保へ移動</div><div class="who"><span class="who-honda"></span><span class="who-okumura"></span><span class="who-kubota"></span></div>
+<div class="note">秋保交通：利用2時間前までに予約。ジャンボタクシーは予約時に空車確認。</div>
+<div class="tip-box"><strong>✨ TAOYAで楽しみたい！</strong><br/>・庭園を眺められる大浴場。入浴時間は15:00〜24:00／5:00〜10:00<br/>・ラウンジのドリンクや夕食時のアルコールなどがオールインクルーシブ<br/>・アフタヌーンティーは14:00〜17:00頃、ナイトアフタヌーンティーは17:00頃〜22:00<br/>・ライブラリーラウンジでは夜食も用意</div><div class="actions">
+<a class="btn site" href="https://akiukotsu.com/menu/773197" rel="noopener" target="_blank">↗ 秋保交通</a>
+<a class="btn call" href="tel:0223049855">☎ 022-304-9855</a>
+<a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=%E4%BB%99%E5%8F%B0%E9%A7%85" rel="noopener" target="_blank">📍 仙台駅</a>
+</div>
+<div class="actions"><a class="route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=TAOYA秋保" rel="noopener" target="_blank">📍 現在地から行く</a></div></article>
+<article class="card hotel shared" data-event="2026-09-05T15:00:00+09:00">
+<div class="family-tags">
+<span class="tag honda">本多家</span>
+<span class="tag okumura">奥村家</span>
+<span class="tag kubota">久保田家</span>
+</div>
+<div class="time">15:00 到着予定</div><div class="title">♨️ TAOYA秋保</div><div class="who"><span class="who-all"></span><span class="who-all"></span><span class="who-all"></span></div>
+<div class="meta">予約上の到着時間 15:00 ／ チェックイン可能 15:00〜19:00<br/>翌11:00チェックアウト</div>
+<div class="tip-box"><strong>💡 ワンポイント</strong><br/>予約上のチェックアウトは11:00。水族館へは路線バス＋JRで移動する予定。</div><div class="actions">
+<a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=TAOYA%E7%A7%8B%E4%BF%9D" rel="noopener" target="_blank">📍 Googleマップ</a>
+<a class="btn site" href="https://www.ooedoonsen.jp/taoya-akiu/" rel="noopener" target="_blank">↗ 公式サイト</a>
+</div>
+<details class="reservation-details">
+<summary>予約詳細を見る</summary>
+<div class="reservation-body">
+<div class="reservation-numbers">
+<div class="reservation-number"><span>1室目 予約番号</span><strong>3645-1752-4247</strong></div>
+<div class="reservation-number"><span>2室目 予約番号</span><strong>3645-1753-8688</strong></div>
+<div class="reservation-number"><span>3室目 予約番号</span><strong>3645-1754-4428</strong></div>
+</div>
+<dl class="reservation-grid">
+<dt>宿泊日</dt><dd>2026/09/05（土）〜 09/06（日）</dd>
+<dt>チェックイン</dt><dd>15:00〜19:00（到着予定 15:00）</dd>
+<dt>チェックアウト</dt><dd>11:00</dd>
+<dt>プラン</dt><dd>【早宿45】1泊2食付 基本バイキングプラン<br/>※仙台トク旅キャンペーン適用対象外</dd>
+<dt>部屋</dt><dd>【禁煙】スーペリア和ベッド10畳（本館）×3室</dd>
+<dt>宿泊人数</dt><dd>1室目：大人2人＋3歳未満1人<br/>2室目：大人2人＋3歳未満1人<br/>3室目：大人2人</dd>
+<dt>支払い</dt><dd>現地払い</dd>
+<dt>宿泊料金</dt><dd>53,280円（税込）×3室</dd>
+</dl>
+<div class="price-total">3室合計 <strong>159,840円（税込）</strong></div>
+</div>
+</details>
+<div class="actions"><a class="route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=TAOYA秋保" rel="noopener" target="_blank">📍 現在地から行く</a></div></article>
+</div>
+</section>
+<section class="day" data-date="2026-09-06" id="d3">
+<div class="day-head"><h2 class="date">9/6（日）｜帰る日</h2><div class="deadline-box daily-deadlines"><div class="deadline-head">⏰ 今日のデッドライン</div><div class="deadline-list"><div class="deadline-item" data-day="d3">
+<div class="deadline-date">9/6 16:19</div>
+<div class="deadline-text">
+        🚄 仙台駅｜新幹線出発
+        <span class="deadline-status">水族館からの移動時間を見て早めに仙台駅へ。</span>
+</div>
+</div><div class="deadline-item" data-day="d3">
+<div class="deadline-date">9/6 16:50</div>
+<div class="deadline-text">
+        ✈️ 仙台空港｜Peach出発
+        <span class="deadline-status">水族館から中野栄駅→仙台駅→仙台空港アクセス線で移動。</span>
+</div>
+</div><div class="deadline-item" data-day="d3">
+<strong>9/6 16:20</strong><br/>
+  ✈️ Peach MM419｜チェックイン・手荷物預け締切<br/>
+  16:50 仙台空港発。Peach国内線は出発30分前までにチェックイン・手荷物預けが必要。
+</div></div></div><span class="day-note">TAOYAをチェックアウト</span></div>
+<div class="timeline">
+<article class="card hotel shared" data-event="2026-09-06T11:00:00+09:00">
+<div class="family-tags">
+<span class="tag honda">本多家</span>
+<span class="tag okumura">奥村家</span>
+<span class="tag kubota">久保田家</span>
+</div>
+<div class="time">11:00</div><div class="title">♨️ TAOYA秋保 チェックアウト</div><div class="meta">3家族ともチェックアウト</div><div class="tip-box"><strong>💡 ワンポイント</strong><br/>予約上のチェックアウトは11:00。水族館へは路線バス＋JRで移動する予定。</div><div class="actions"><a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=TAOYA%E7%A7%8B%E4%BF%9D" rel="noopener" target="_blank">📍 Googleマップ</a></div><div class="actions"><a class="route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=TAOYA秋保" rel="noopener" target="_blank">📍 現在地から行く</a></div>
+</article><article class="card" data-event="2026-09-06T11:40:00+09:00">
+<div class="family-tags">
+<span class="tag honda">本多家</span>
+<span class="tag okumura">奥村家</span>
+<span class="tag kubota">久保田家</span>
+</div>
+<div class="time">11:00チェックアウト後</div>
+<h3>🐬 仙台うみの杜水族館</h3>
+<p><strong>9/6の営業時間：</strong>9:00〜17:30（最終入館17:00）</p>
+<p><strong>入館料：</strong>大人2,400円 ／ 4歳未満無料</p>
+<div class="tip-box"><strong>✨ ここは見たい！</strong><br/>・三陸の海を切り抜いたような巨大水槽「いのちきらめく うみ」<br/>・ロープにびっしり付いたマボヤを下から見上げる「マボヤのもり」<br/>・バンドウイルカ、ペンギン、ミズクラゲなどの生きものも展示<br/>・時間が限られるので、まず1Fの東北・三陸の海エリアをチェック</div>
+<div class="tip-box">
+<strong>🐬 ショー時間</strong><br/>
+  9/6のイベント・ショー開催時刻は公式発表待ち。公開後に確認。
+</div>
+<div class="aquarium-actions">
+<a class="official" href="https://www.uminomori.jp/umino/" rel="noopener" target="_blank">🌐 公式サイト</a>
+<a class="route" href="https://www.google.com/maps/dir/?api=1&amp;destination=%E4%BB%99%E5%8F%B0%E3%81%86%E3%81%BF%E3%81%AE%E6%9D%9C%E6%B0%B4%E6%97%8F%E9%A4%A8" rel="noopener" target="_blank">📍 現在地から行く</a>
+</div>
+</article>
+<article class="card transport" data-event="2026-09-06T16:19:00+09:00">
+<div class="family-tags"><span class="tag honda">本多家</span></div>
+<div class="time">16:19 → 17:56</div>
+<div class="title">🚄 仙台駅 → 東京駅</div>
+<div class="desc">
+    東北新幹線 はやぶさ86号<br/>
+    9号車・1列 A/B<br/>
+    所要 1時間37分
+  </div><div class="tip-box"><strong>💡 ワンポイント</strong><br/>仙台駅16:19発、東京17:56着。水族館から仙台駅へ戻る時間を優先。</div></article>
+<article class="card transport" data-event="2026-09-06T16:50:00+09:00">
+<div class="family-tags"><span class="tag okumura">奥村家</span></div>
+<div class="time">16:50 → 18:10</div><div class="title">✈️ 仙台 → 新千歳</div><div class="f okumura"><span class="label">Peach MM419</span><br/>仙台空港 16:50発 → 新千歳空港 18:10着</div><div class="tip-box"><strong>💡 ワンポイント</strong><br/>仙台空港16:50発、新千歳18:10着。水族館から空港まで乗り換えがあるので早めに移動。</div><div class="actions"><a class="btn map" href="https://www.google.com/maps/search/?api=1&amp;query=%E4%BB%99%E5%8F%B0%E7%A9%BA%E6%B8%AF" rel="noopener" target="_blank">📍 仙台空港</a></div>
+<div class="tip-box">
+<strong>✈️ Peach チェックイン</strong><br/>
+  アプリ：14:50〜16:20（出発120〜30分前）<br/>
+  空港カウンター・手荷物預け：15:20〜16:20（出発90〜30分前）<br/>
+<strong>16:20がチェックイン・手荷物預けの締切。</strong>
+<div class="actions">
+<a class="btn" href="https://www.flypeach.com/lm/ai/airports/checkin" rel="noopener" target="_blank">Peach公式｜チェックイン案内</a>
+</div>
+</div>
+</article>
+</div>
+</section>
+<div class="footer">※現在確定している旅行情報を掲載しています。外部リンクは新しいタブで開きます。</div>
+</main>
+<script>
+(function(){
+  const tripStart = new Date('2026-09-04T00:00:00+09:00').getTime();
+  const tripEnd = new Date('2026-09-06T23:59:59+09:00').getTime();
+
+  function jstParts(d){
+    const p={};
+    new Intl.DateTimeFormat('ja-JP',{
+      timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',
+      hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false
+    }).formatToParts(d).forEach(x=>p[x.type]=x.value);
+    return p;
+  }
+  function selectedView(){
+    return document.querySelector('.day-tab.active')?.dataset.day || 'top';
+  }
+  function setView(id, scroll){
+    document.querySelectorAll('.day-tab').forEach(b=>b.classList.toggle('active',b.dataset.day===id));
+    const top=document.getElementById('topPanel');
+    if(top) top.classList.toggle('active-top',id==='top');
+    document.querySelectorAll('section.day').forEach(s=>s.classList.toggle('active-day',id!=='top'&&s.id===id));
+    try{localStorage.setItem('sendaiView',id)}catch(e){}
+    applyFamilyFilter(document.querySelector('.filter-btn.active')?.dataset.filter || 'all');
+    updateLive();
+    if(scroll) document.getElementById('dayTabs')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function applyFamilyFilter(f){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.filter===f));
+    const active=selectedView();
+    if(active==='top') return;
+    document.querySelectorAll('#'+active+' article.card').forEach(card=>{
+      const ok=f==='all'||!!card.querySelector('.tag.'+f);
+      card.classList.toggle('filter-hidden',!ok);
+    });
+    try{localStorage.setItem('sendaiFamily',f)}catch(e){}
+  }
+  function updateTopNext(){
+    const now=Date.now();
+    const events=[...document.querySelectorAll('.card[data-event]')]
+      .map(card=>({card,time:new Date(card.dataset.event).getTime()}))
+      .filter(x=>!Number.isNaN(x.time)).sort((a,b)=>a.time-b.time);
+    const next=events.find(x=>x.time>=now);
+    const time=document.getElementById('topNextTime'), title=document.getElementById('topNextTitle'), cd=document.getElementById('topCountdown');
+    if(!time||!title||!cd) return;
+    if(!next){ if(now>tripEnd){time.textContent='旅行終了';title.textContent='おつかれさまでした！';cd.textContent='';} return; }
+    const p=jstParts(new Date(next.time));
+    time.textContent=`${Number(p.month)}/${Number(p.day)} ${p.hour}:${p.minute}`;
+    title.textContent=next.card.querySelector('.title,h3')?.textContent?.trim()||'次の予定';
+    const mins=Math.max(0,Math.floor((next.time-now)/60000));
+    cd.textContent=mins<60?`あと約${mins}分`:mins<1440?`あと約${Math.floor(mins/60)}時間${mins%60}分`:`あと${Math.ceil(mins/1440)}日`;
+  }
+  function updateLive(){
+    document.querySelectorAll('.now-line').forEach(x=>x.remove());
+    document.querySelectorAll('.card').forEach(x=>x.classList.remove('is-past','is-next'));
+    const clock=document.getElementById('liveClock'), state=document.getElementById('liveState');
+    const now=new Date(), nowMs=now.getTime(), p=jstParts(now);
+    if(clock) clock.textContent=`現在 ${p.month}/${p.day} ${p.hour}:${p.minute}`;
+    if(nowMs<tripStart){ if(state) state.textContent='旅行前'; updateTopNext(); return; }
+    if(nowMs>tripEnd){ if(state) state.textContent='旅行は終了しました'; updateTopNext(); return; }
+    const key=`${p.year}-${p.month}-${p.day}`;
+    const section=[...document.querySelectorAll('section.day')].find(s=>s.dataset.date===key);
+    if(!section){updateTopNext();return;}
+    const cards=[...section.querySelectorAll('.card[data-event]')]
+      .map(card=>({card,time:new Date(card.dataset.event).getTime()})).sort((a,b)=>a.time-b.time);
+    cards.forEach(e=>{if(e.time<nowMs)e.card.classList.add('is-past')});
+    const next=cards.find(e=>e.time>=nowMs); if(next)next.card.classList.add('is-next');
+    if(state&&next){const q=jstParts(new Date(next.time));state.textContent=`次は ${q.hour}:${q.minute}｜${next.card.querySelector('.title,h3')?.textContent?.trim()||'次の予定'}`;}
+    if(!cards.length){updateTopNext();return;}
+    const tl=section.querySelector('.timeline'); if(!tl){updateTopNext();return;}
+    let y=cards[0].card.offsetTop;
+    if(nowMs>=cards[cards.length-1].time){const c=cards[cards.length-1].card;y=c.offsetTop+c.offsetHeight+6}
+    else{
+      for(let i=0;i<cards.length-1;i++){
+        const a=cards[i],b=cards[i+1];
+        if(nowMs>=a.time&&nowMs<=b.time){
+          const ay=a.card.offsetTop+a.card.offsetHeight/2,by=b.card.offsetTop+b.card.offsetHeight/2;
+          y=ay+(by-ay)*((nowMs-a.time)/(b.time-a.time));break;
+        }
+      }
+    }
+    const line=document.createElement('div');line.className='now-line';line.style.top=Math.max(0,y)+'px';
+    const label=document.createElement('span');label.className='now-label';label.textContent=`いま ${p.hour}:${p.minute}`;line.appendChild(label);tl.appendChild(line);
+    updateTopNext();
+  }
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    let view='top',family='all';
+    try{view=localStorage.getItem('sendaiView')||'top';family=localStorage.getItem('sendaiFamily')||'all'}catch(e){}
+    if(!['top','d1','d2','d3'].includes(view))view='top';
+    if(!['all','honda','okumura','kubota'].includes(family))family='all';
+    document.querySelectorAll('.day-tab').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.day,true)));
+    document.querySelectorAll('.filter-btn').forEach(b=>b.addEventListener('click',()=>applyFamilyFilter(b.dataset.filter)));
+    setView(view,false);applyFamilyFilter(family);updateLive();updateTopNext();
+    setInterval(()=>{updateLive();updateTopNext()},30000);
+  });
+})();
+</script></body>
+</html>
