@@ -1,0 +1,1 @@
+# sendai-trip-2026
